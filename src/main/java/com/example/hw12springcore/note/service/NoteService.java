@@ -1,4 +1,6 @@
-package com.example.hw12springcore.note;
+package com.example.hw12springcore.note.service;
+
+import com.example.hw12springcore.note.Note;
 
 import java.util.List;
 

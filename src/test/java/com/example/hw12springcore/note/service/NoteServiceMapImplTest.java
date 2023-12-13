@@ -1,14 +1,15 @@
-package com.example.hw12springcore.note;
+package com.example.hw12springcore.note.service;
 
+import com.example.hw12springcore.note.Note;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NoteServiceMapImplTest {
     private NoteService noteService;
