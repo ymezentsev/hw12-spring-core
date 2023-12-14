@@ -1,6 +1,9 @@
 package com.example.hw12springcore.note.service;
 
 import com.example.hw12springcore.note.Note;
+import com.example.hw12springcore.note.NoteDto;
+import com.example.hw12springcore.note.NoteMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -8,21 +11,25 @@ import java.util.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NoteServiceMapImpl implements NoteService {
     private final Map<Long, Note> noteMap = new LinkedHashMap<>();
+    private final NoteMapper noteMapper;
 
     @Override
-    public List<Note> listAll() {
+    public List<NoteDto> listAll() {
         return noteMap.values()
                 .stream()
+                .map(noteMapper::buildNoteDto)
                 .toList();
     }
 
     @Override
-    public Note add(Note note) {
+    public NoteDto add(NoteDto noteDto) {
+        Note note = noteMapper.buildNote(noteDto);
         note.setId(UUID.randomUUID().getLeastSignificantBits());
         noteMap.put(note.getId(), note);
-        return note;
+        return noteMapper.buildNoteDto(note);
     }
 
     @Override
@@ -35,7 +42,8 @@ public class NoteServiceMapImpl implements NoteService {
     }
 
     @Override
-    public void update(Note note) {
+    public void update(NoteDto noteDto) {
+        Note note = noteMapper.buildNote(noteDto);
         if (noteMap.get(note.getId()) == null) {
             log.error("update: such note doesn't exist");
             throw new NoSuchElementException();
@@ -44,11 +52,11 @@ public class NoteServiceMapImpl implements NoteService {
     }
 
     @Override
-    public Note getById(long id) {
+    public NoteDto getById(long id) {
         if (noteMap.get(id) == null) {
             log.error("getById: such id doesn't exist");
             throw new NoSuchElementException();
         }
-        return noteMap.get(id);
+        return noteMapper.buildNoteDto(noteMap.get(id));
     }
 }

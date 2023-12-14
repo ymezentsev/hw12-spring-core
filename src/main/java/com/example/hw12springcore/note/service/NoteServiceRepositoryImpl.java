@@ -1,6 +1,8 @@
 package com.example.hw12springcore.note.service;
 
 import com.example.hw12springcore.note.Note;
+import com.example.hw12springcore.note.NoteDto;
+import com.example.hw12springcore.note.NoteMapper;
 import com.example.hw12springcore.note.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -13,15 +15,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoteServiceRepositoryImpl implements NoteService {
     private final NoteRepository noteRepository;
+    private final NoteMapper noteMapper;
 
     @Override
-    public List<Note> listAll() {
-        return noteRepository.findAll();
+    public List<NoteDto> listAll() {
+        return noteRepository.findAll()
+                .stream()
+                .map(noteMapper::buildNoteDto)
+                .toList();
     }
 
     @Override
-    public Note add(Note note) {
-        return noteRepository.save(note);
+    public NoteDto add(NoteDto noteDto) {
+        Note note = noteRepository.save(noteMapper.buildNote(noteDto));
+        return noteMapper.buildNoteDto(note);
     }
 
     @Override
@@ -30,12 +37,12 @@ public class NoteServiceRepositoryImpl implements NoteService {
     }
 
     @Override
-    public void update(Note note) {
-        noteRepository.save(note);
+    public void update(NoteDto noteDto) {
+        noteRepository.save(noteMapper.buildNote(noteDto));
     }
 
     @Override
-    public Note getById(long id) {
-        return noteRepository.getReferenceById(id);
+    public NoteDto getById(long id) {
+        return noteMapper.buildNoteDto(noteRepository.getReferenceById(id));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.hw12springcore.note.service;
 
-import com.example.hw12springcore.note.Note;
+import com.example.hw12springcore.note.NoteDto;
+import com.example.hw12springcore.note.NoteMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,80 +9,82 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NoteServiceMapImplTest {
     private NoteService noteService;
 
     @BeforeEach
     void init() {
-        noteService = new NoteServiceMapImpl();
+        noteService = new NoteServiceMapImpl(new NoteMapper());
     }
 
     @Test
     void testListAll() {
-        List<Note> expectedList = new ArrayList<>();
-        Note note1 = new Note(null, "Note1", "New note1");
-        Note note2 = new Note(null, "Note2", "New note2");
+        List<NoteDto> expectedList = new ArrayList<>();
+        NoteDto noteDto1 = new NoteDto(null, "Note1", "New note1");
+        NoteDto noteDto2 = new NoteDto(null, "Note2", "New note2");
 
-        expectedList.add(noteService.add(note1));
-        expectedList.add(noteService.add(note2));
+        expectedList.add(noteService.add(noteDto1));
+        expectedList.add(noteService.add(noteDto2));
 
         assertEquals(expectedList, noteService.listAll());
     }
 
     @Test
     void testAdd() {
-        Note note = new Note(null, "Note1", "New note1");
+        NoteDto noteDto = new NoteDto(null, "Note1", "New note1");
+        NoteDto actualNoteDto = noteService.add(noteDto);
 
-        assertEquals(note, noteService.add(note));
+        assertAll(() -> assertEquals(noteDto.getTitle(), actualNoteDto.getTitle()),
+                () -> assertEquals(noteDto.getContent(), actualNoteDto.getContent()),
+                () -> assertNotNull(actualNoteDto.getId()));
     }
 
     @Test
     void testDeleteById() {
-        Note note = new Note(null, "Note1", "New note1");
-        noteService.add(note);
+        NoteDto noteDto = new NoteDto(null, "Note1", "New note1");
+        NoteDto actualNoteDto = noteService.add(noteDto);
 
-        noteService.deleteById(note.getId());
-        assertThrows(NoSuchElementException.class, ()->noteService.getById(note.getId()));
+        noteService.deleteById(actualNoteDto.getId());
+        assertThrows(NoSuchElementException.class, () -> noteService.getById(actualNoteDto.getId()));
     }
 
     @Test
     void testThatDeleteByIdThrowException() {
-        assertThrows(NoSuchElementException.class, ()->noteService.deleteById(1));
+        assertThrows(NoSuchElementException.class, () -> noteService.deleteById(1));
     }
 
     @Test
     void testUpdate() {
-        Note note = new Note(null, "Note1", "New note1");
-        noteService.add(note);
+        NoteDto noteDto = new NoteDto(null, "Note1", "New note1");
+        NoteDto actualNoteDto = noteService.add(noteDto);
 
         String expectedTittle = "New tittle";
-        note.setTitle(expectedTittle);
-        noteService.update(note);
+        actualNoteDto.setTitle(expectedTittle);
+        noteService.update(actualNoteDto);
 
-        assertEquals(expectedTittle, noteService.getById(note.getId()).getTitle());
+        assertEquals(expectedTittle, noteService.getById(actualNoteDto.getId()).getTitle());
     }
 
     @Test
     void testThatUpdateThrowException() {
-        Note note = new Note(1L, "Note1", "New note1");
+        NoteDto noteDto = new NoteDto(1L, "Note1", "New note1");
 
-        assertThrows(NoSuchElementException.class, ()->noteService.update(note));
+        assertThrows(NoSuchElementException.class, () -> noteService.update(noteDto));
     }
 
     @Test
     void testGetById() {
-        Note note = new Note(null, "Note1", "New note1");
-        noteService.add(note);
+        NoteDto noteDto = new NoteDto(null, "Note1", "New note1");
+        NoteDto actualNoteDto = noteService.add(noteDto);
 
-        assertEquals(note, noteService.getById(note.getId()));
+        assertEquals(actualNoteDto, noteService.getById(actualNoteDto.getId()));
     }
 
     @Test
     void testThatGetByIdThrowException() {
-        assertThrows(NoSuchElementException.class, ()->noteService.getById(1));
+        assertThrows(NoSuchElementException.class, () -> noteService.getById(1));
     }
 
 }
