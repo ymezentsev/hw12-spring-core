@@ -24,11 +24,11 @@ public class NoteController {
 
     @PostMapping("/add")
     public String addNote(@RequestParam String title, @RequestParam String content) {
-        Note note = new Note();
-        note.setTitle(title);
-        note.setContent(content);
+        NoteDto noteDto = new NoteDto();
+        noteDto.setTitle(title);
+        noteDto.setContent(content);
 
-        noteService.add(note);
+        noteService.add(noteDto);
         return "redirect:/note/list";
     }
 
@@ -47,7 +47,7 @@ public class NoteController {
 
     @PostMapping("/edit")
     public String postEditNote(@RequestParam long id, @RequestParam String title, @RequestParam String content) {
-        noteService.update(new Note(id, title, content));
+        noteService.update(new NoteDto(id, title, content));
         return "redirect:/note/list";
     }
 }
