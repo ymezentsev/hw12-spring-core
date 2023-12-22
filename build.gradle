@@ -38,6 +38,8 @@ dependencies {
 	implementation group: 'com.h2database', name: 'h2', version: '2.2.224'
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.2.0'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.2.0'
 }
 
 tasks.named('test') {
