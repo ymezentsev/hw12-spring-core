@@ -19,8 +19,8 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class JDBCSecurityConfiguration {
     private final DataSource dataSource;
-    private static final String SELECT_USER_FROM_DB = "select username, password, enabled from users where username=?";
-    private static final String SELECT_AUTHORITIES_FROM_DB = "select username, role from users where username=?";
+    private static final String SELECT_USER_FROM_DB = "select username, password, enabled from users_jdbc where username=?";
+    private static final String SELECT_AUTHORITIES_FROM_DB = "select username, role from users_jdbc where username=?";
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
