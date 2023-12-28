@@ -19,14 +19,16 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class JDBCSecurityConfiguration {
     private final DataSource dataSource;
+    private static final String SELECT_USER_FROM_DB = "select username, password, enabled from users where username=?";
+    private static final String SELECT_AUTHORITIES_FROM_DB = "select username, role from users where username=?";
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
                 .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder())
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from users where username=?")
-                .authoritiesByUsernameQuery("select username, role from users where username=?");
+                .usersByUsernameQuery(SELECT_USER_FROM_DB)
+                .authoritiesByUsernameQuery(SELECT_AUTHORITIES_FROM_DB);
     }
 
     @Bean
